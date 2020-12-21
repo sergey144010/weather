@@ -1,0 +1,31 @@
+#!/usr/bin/env bash
+
+if [ $# -gt 0 ]; then
+    if [ "$1" == "empty" ]; then
+        shift 1
+    elif [ "$1" == "client-check" ]; then
+        shift 1
+        cd site ; 
+           php ./vendor/bin/phpcs -p ;
+           php ./vendor/bin/phpstan analyse ;
+           php artisan test
+    elif [ "$1" == "server-check" ]; then
+        shift 1
+        cd weather_history ; 
+           php ./vendor/bin/phpcs -p ;
+           php ./vendor/bin/phpstan analyse ;
+           php artisan test
+    elif [ "$1" == "client-artisan" ]; then
+        shift 1
+        docker-compose exec php \
+            php ./site/artisan "$@"
+    elif [ "$1" == "server-artisan" ]; then
+        shift 1
+        docker-compose exec php \
+            php ./weather_history/artisan "$@"
+    else
+        echo "./develop: Unknown command '$@'"
+    fi
+else
+    echo "./develop: You must specify some command"
+fi

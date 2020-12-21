@@ -1,0 +1,40 @@
+version: '3'
+services:
+  nginx:
+    container_name: "weather.nginx"
+    image: nginx:1.17.6
+    ports:
+      - "80:80"
+    volumes:
+      - .:/var/www/platform/current
+      - ./docker/nginx/conf.d:/etc/nginx/conf.d
+  php:
+    container_name: "weather.php"
+    build: ./docker/php/
+    environment:
+      PHP_EXTENSION_XDEBUG: ${PHP_EXTENSION_XDEBUG:-false}
+    volumes:
+      - .:/var/www/platform/current
+      - ./docker/php/conf.d/php.ini:/usr/local/etc/php/conf.d/php.ini
+      - ./docker/php/conf.d/xdebug.ini:/usr/local/etc/php/conf.d/xdebug.ini
+  mariadb:
+    container_name: "weather.mariadb"
+    build: ./docker/mariadb/
+    volumes:
+      - volumedb:/var/lib/mysql
+    ports:
+      - "3310:3306"
+    environment:
+      MYSQL_ROOT_PASSWORD: "root"
+      MYSQL_DATABASE: "weather"
+      MYSQL_USER: "platform"
+      MYSQL_PASSWORD: "platform"
+    healthcheck:
+      test: "/usr/bin/mysql --user=root --password=root --execute \"SHOW DATABASES;\""
+      interval: 2s
+      timeout: 20s
+      retries: 10
+
+volumes:
+  volumedb:
+    driver: local
