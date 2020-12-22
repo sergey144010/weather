@@ -5,6 +5,7 @@ services:
     image: nginx:1.17.6
     ports:
       - "80:80"
+      - "81:81"
     volumes:
       - .:/var/www/platform/current
       - ./docker/nginx/conf.d:/etc/nginx/conf.d
@@ -38,3 +39,4 @@ services:
 volumes:
   volumedb:
     driver: local
+
