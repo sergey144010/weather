@@ -6,7 +6,7 @@ use App\Services\WeatherClient;
 use Illuminate\Config\Repository;
 use Illuminate\Support\ServiceProvider;
 use Psr\Container\ContainerInterface;
-use \Graze\GuzzleHttp\JsonRpc\Client;
+use Graze\GuzzleHttp\JsonRpc\Client;
 
 class WeatherServiceProvider extends ServiceProvider
 {

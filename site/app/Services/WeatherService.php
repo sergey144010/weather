@@ -22,14 +22,18 @@ class WeatherService
      */
     public function getByDate(string $date): HistoryDto
     {
-        $response = $this->decodeResponse(
-            $this->weatherClient->client()->send(
-                $this->weatherClient->client()->request(1, 'weather@getByDate', ['date' => $date])
-            )
+        $response = $this->weatherClient->client()->send(
+            $request = $this->weatherClient->client()->request(1, 'weather@getByDate', ['date' => $date])
         );
-        $this->checkErrors($response);
 
-        return $this->toModel($response->result);
+        if (! isset($response)) {
+            throw new \Exception('Response is null');
+        }
+
+        $responseDecoded = $this->decodeResponse($response);
+        $this->checkErrors($responseDecoded);
+
+        return $this->toModel($responseDecoded->result);
     }
 
     /**
@@ -39,14 +43,18 @@ class WeatherService
      */
     public function getHistory(): array
     {
-        $response = $this->decodeResponse(
-            $this->weatherClient->client()->send(
-                $this->weatherClient->client()->request(1, 'weather@getHistory', ['lastDays' => 30])
-            )
+        $response = $this->weatherClient->client()->send(
+            $this->weatherClient->client()->request(1, 'weather@getHistory', ['lastDays' => 30])
         );
-        $this->checkErrors($response);
 
-        return $this->toModelCollection($response->result);
+        if (! isset($response)) {
+            throw new \Exception('Response is null');
+        }
+
+        $responseDecoded = $this->decodeResponse($response);
+        $this->checkErrors($responseDecoded);
+
+        return $this->toModelCollection($responseDecoded->result);
     }
 
     private function checkErrors(\stdClass $response): void

@@ -2,7 +2,7 @@
 
 namespace App\Services;
 
-use \Graze\GuzzleHttp\JsonRpc\Client;
+use Graze\GuzzleHttp\JsonRpc\Client;
 
 class WeatherClient
 {
